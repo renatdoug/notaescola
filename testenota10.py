@@ -11,38 +11,28 @@ import requests
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-# The ID and range of a sample spreadsheet.
+# The ID of your spreadsheet.
 SAMPLE_SPREADSHEET_ID = "1S1oID1RUYCyYxq2ZRcAmY0XVx1PaO7EJTtRLNDoLLPM"
 
 def get_credentials():
     creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # Load credentials from the provided JSON data
+    creds_data = {
+        "type": "service_account",
+        "project_id": "digitacaonotas",
+        "private_key_id": "5c1b2b39dff8f490c4e36b7963b1bb7adc1de745",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCuKiKhkY201VGh\n5oSfQZ+xwQvBc+e+B5WfFg6/lwXmXvFT0cX5lOObJR8ll+azHWKJNNwdYWGciTrK\nuxPj2JRpgCsd0XYXwB8oRPhRTsIMOZRx9bTPWxByl6NkxIM9ryhWXjaB5WyaNsot\nWlDBtYIf7pbD3O6wfDXeyn8Ws28dLWNYLrSkT8pnNewVV2mQtdZI3sjuwdaeGcpc\n91c88P/6haM7LsNdubXzDcggSNee98OhkD39gXiLhgFq3JMoP6tEM4M6thQUFMmx\nZOFu2SnxtUn0Pt0TlMjPrMOwD7kHkfZhq4qSBWSIydjNKCzalTjMXWOsX/BCg5RG\nshGVb4LfAgMBAAECggEAFLZqG/Dle2YLKUfy6cWyKj+dGEqietUIFD1ZT6u0Retw\no9lExCPS1baad6wTAaYy+8JPkybrpuQjG80X1ncBX3KgrhElDDoK+o0JQxIsvatz\nXgIsmKRp1lb2VZuRSBq2n17g+J3CRqzRaoddJ0xgx09mmrCBqnd7KJ3Ic3ivdDap\nJ1sf+uquvvbQ4UDCxt5j94nKP1KPfO2d6ENgQDF+230DHI+cg6ENIw7P17SLPgue\njSlPK20/vmFiIr3fCLFV3BrrRsmOplxEkEJa6qRywW6NEofHa3wQoR4JB4PvobQg\n/rOvcBeYXO2+vkHkCsj5u+28nkvyigCjeAlRA1wCMQKBgQDp4bm4y9LcqJloiFK7\nhX/Z38whgfOslgunWXcIzfoClPM1PEkEt/uqEqb6N64qHlg+pB9n+Wq4iMllXFR2\nOtSIazHg0CRs3EqAA+wfH4id1MA1qktYFWlnSFBbHddW3TMFpDaZDJhzdaN5Y1Xr\nlvhR0mYEcvijeaTUBD5t/B9ECwKBgQC+oqiB/IfpBsFOZ3RawlITE4zpvKjj9JMA\n26Zj/pMretw/TZJ6azm3607c71uVLV0V8hSo7WlaAP3j2oD1wbizH+18yN/pCyfN\nXzPw+9dujkxNE5irclQ8xLHvH0tD0+27G8R9x6ylxmspnKVP5CEwIItsOuVVp5dt\nZn2W9sJM/QKBgQCjIPUYRtoxXEt8FLGX5/qP7cAEkw5yD0nblNQoyPobeObV99F6\nQBWBv3bFybZp3DZyoqjhLZ9ZTNckIq0qtcftys7EXok5gMFZ3uJ/ps/0PiM+iyP4\nMR8OkeqyUvMSvEBNLAeE4rsmtSOrlDSmmOtkrprHeaWg6ESmOLuOnS71lwKBgAlF\nObKQiD9xv6bDayoatwkMc1bOgNwNAbUR+WZ1c8yyfdFqQUxIuJbUD5K45Rg9C4DM\ns+p/GRdyYuZYstrAn+2+CLt/vTvE+huHnKwEYzaSHu3EnTEBL02BNzHssKlMvgvS\nTtza/+9T1dRBNNzMuDxx6LXLq2ld7AQ67rKPr2U1AoGBAIpEjwZGeIdlDeHVPMDy\ntrWxUEX/fz5pvrXUYe+hjmiQMSlGRHmnYDsGJFWrOsbwuinusqBkcm2Il/Q1AlvC\nqFF6e8XHpkBVaKdt8WIioRm6kKN+tx8OqqNZsGBoqpt2iUopIIKhp+y1vu0Lk65H\n4JSYz5cVpoPf6S0N6QJpXoYn\n-----END PRIVATE KEY-----\n",
+  "client_email": "digitarnotas@digitacaonotas.iam.gserviceaccount.com",
+  "client_id": "117384486449011450121",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/digitarnotas%40digitacaonotas.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            # Carrega as credenciais do arquivo credenciaisweb.json no GitHub
-            cred_url = "https://raw.githubusercontent.com/renatdoug/notaescola/main/credenciaisweb.json"
-            response = requests.get(cred_url)
-            if response.status_code == 200:
-                creds_data = response.json()
-                creds = Credentials(
-                    creds_data["token"],
-                    refresh_token=creds_data["refresh_token"],
-                    token_uri=creds_data["token_uri"],
-                    client_id=creds_data["client_id"],
-                    client_secret=creds_data["client_secret"],
-                    scopes=SCOPES
-                )
-            else:
-                st.error("Erro ao carregar as credenciais.")
-
-        # Salva as credenciais no arquivo 'token.json' para uso posterior
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-
+def get_credentials():
+    creds = Credentials.from_service_account_info(creds_data, scopes=SCOPES)
     return creds
 
 def main():
@@ -126,3 +116,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
