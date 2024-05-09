@@ -1,6 +1,6 @@
 import streamlit as st
 from google.auth.transport.requests import Request
-from google.oauth2.service_account import Credentials
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -28,7 +28,14 @@ def get_credentials():
             response = requests.get(cred_url)
             if response.status_code == 200:
                 creds_data = response.json()
-                creds = Credentials.from_authorized_user_info(creds_data, SCOPES)
+                creds = Credentials(
+                    creds_data["token"],
+                    refresh_token=creds_data["refresh_token"],
+                    token_uri=creds_data["token_uri"],
+                    client_id=creds_data["client_id"],
+                    client_secret=creds_data["client_secret"],
+                    scopes=SCOPES
+                )
             else:
                 st.error("Erro ao carregar as credenciais.")
 
